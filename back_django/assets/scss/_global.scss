@@ -1,0 +1,116 @@
+* {
+    font-family: $text-font, sans-serif;
+    position: relative;
+}
+
+p,
+span,
+li {
+    color: $text-color;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: $title-color;
+    font-family: $title-font;
+}
+
+h1 {
+    font-size: $h1-font-size;
+}
+
+h2 {
+    font-size: $h2-font-size;
+}
+
+h3 {
+    font-size: $h3-font-size;
+}
+
+h4 {
+    font-size: $h4-font-size;
+}
+
+h5 {
+    font-size: $h5-font-size;
+}
+
+h6 {
+    font-size: $h6-font-size;
+}
+
+a {
+    text-decoration: none;
+    color: $link-color;
+    font-weight: 500;
+    &:hover {
+        transition: 0.3s ease-in-out !important;
+        color: $link-hover;
+    }
+}
+
+ul,
+ol {
+    list-style-type: none;
+}
+
+::selection {
+    background-color: $color-primary;
+    color: #fff;
+}
+
+.btn {
+    font-size: $btn-font-size;
+    padding: 5px 15px !important;
+    margin: 20px 0 !important;
+    font-weight: $btn-font-weight;
+    border-radius: $btn-radius;
+    &:hover {
+        transition: 0.3s ease-in-out !important;
+    }
+    &.btn-primary {
+        // background: $btn-primary-bg !important;
+        // color: $btn-primary-color !important;
+        // border: $btn-primary-border;
+        &:hover {
+            border: $btn-primary-border-hover;
+            background: $btn-primary-bg-hover !important;
+            color: $btn-primary-color-hover;
+        }
+    }
+    &.btn-secondary {
+        background: $btn-secondary-bkg !important;
+        color: $btn-secondary-color;
+        border: $btn-secondary-border;
+        &:hover {
+            border: $btn-secondary-border-hover;
+            background: $btn-secondary-bkg-hover !important;
+            color: $btn-secondary-color-hover;
+        }
+    }
+    &.btn-dark {
+        background: $color-dark;
+        color: #fff;
+        &:hover {
+            background: rgba($color-dark, 0.8);
+            color: #fff;
+            border: 1px solid rgba($color-dark, 0.8);
+        }
+    }
+}
+
+main {
+    margin-top: $main-top;
+}
+
+// Responsive
+
+@media screen and (min-width: 1200px) {
+    .container {
+        max-width: $container-desktop !important;
+    }
+}

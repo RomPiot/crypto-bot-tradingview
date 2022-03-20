@@ -1,0 +1,7 @@
+{
+    "terminal.integrated.cwd": "${workspaceFolder}/back_django/src",
+    "python.defaultInterpreterPath": "${workspaceFolder}/back_django/.venv/bin/python3",
+    "python.terminal.activateEnvironment": true,
+    "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.envFile": "${workspaceFolder}/back_django/.venv",
+}

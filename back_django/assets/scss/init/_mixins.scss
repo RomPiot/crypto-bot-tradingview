@@ -1,0 +1,15 @@
+$assetsPath: "/assets/";
+
+@mixin svg-icon($color, $width, $height) {
+  height: $height;
+  width: $width;
+  fill: $color;
+}
+
+@function rem($size) {
+  @return calc($size / $text-size * 1rem);
+}
+
+@function assets($file) {
+  @return url($assetsPath + $file);
+}

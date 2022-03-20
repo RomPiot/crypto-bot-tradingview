@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+
+    db:
+        image: postgres:latest
+        restart: always
+        volumes:
+            - pgdata:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_NAME=${DB_NAME}
+            - POSTGRES_USER=${DB_USER}
+            - POSTGRES_PASSWORD=${DB_PASS}
+            - POSTGRES_PASSWORD=${DB_SERVICE}
+
+    back:
+        build: ./back_django/
+        command: python3 src/manage.py runserver ${BACK_URL}:${BACK_PORT}
+        volumes:
+            - ./back_django/:/usr/src/app
+        ports:
+            - "${BACK_PORT}:${BACK_PORT}"
+        env_file: .env
+        environment:
+            - POSTGRES_NAME=${DB_NAME}
+            - POSTGRES_USER=${DB_USER}
+            - POSTGRES_PASSWORD=${DB_PASS}
+        depends_on:
+            - db
+
+    mailer:
+        image: maildev/maildev
+        command: bin/maildev --web 1080 --smtp 1025 --hide-extensions STARTTLS
+        ports:
+            - "1080:1080"
+            - "1025:1025"
+
+volumes:
+    pgdata:

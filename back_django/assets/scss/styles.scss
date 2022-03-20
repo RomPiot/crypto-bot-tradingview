@@ -1,0 +1,11 @@
+@import "init/reset";
+@import "modules/bootstrap";
+
+@import "config";
+@import "init/utils";
+@import "init/mixins";
+
+@import "global";
+
+@import "partials/header";
+@import "partials/footer";

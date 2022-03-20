@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Default Title{% endblock title %}</title>
+        {% comment %} <link rel="stylesheet" href="{% static 'assets/build/styles.css' %}" /> {% endcomment %}
+        <script src="{% static 'build/front.js' %}"></script>
+        <link rel="stylesheet" href="{% static 'build/front.css' %}">
+    </head>
+    <body>
+        {% include "includes/navigation.html" %}
+
+        <div class="container">
+
+            {% comment %} {% if app.session is not null and app.session.started %}
+                {% set flash_messages = app.session.flashbag.all %}
+
+                {% if flash_messages|length > 0 %}
+                    <div id="flash-messages">
+                        {% for label, messages in flash_messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    {{ message|trans|raw }}
+                                </div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endif %} {% endcomment %}
+
+            <div class="btn btn-primary">TEST</div>
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>
+
+

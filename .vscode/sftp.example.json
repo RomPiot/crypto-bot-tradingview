@@ -1,0 +1,34 @@
+{
+  "name": "PROJECT_NAME",
+  "host": "HOST_NAME",
+  "protocol": "ftp",
+  "port": 21,
+  "username": "USERNAME",
+  "password": "PASSWORD",
+  "uploadOnSave": true,
+  "defaultProfile": "preprod",
+  "profiles": {
+    "preprod": {
+      "remotePath": "/preprod",
+      "ignore": [
+        ".vscode",
+        ".git",
+        ".DS_Store",
+        ".env",
+        ".env.dev",
+        ".env.prod"
+      ]
+    },
+    "prod": {
+      "remotePath": "/prod",
+      "ignore": [
+        ".vscode",
+        ".git",
+        ".DS_Store",
+        ".env",
+        ".env.dev",
+        ".env.preprod"
+      ]
+    }
+  }
+}

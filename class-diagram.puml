@@ -1,0 +1,85 @@
+' CTRL+SHIFT+X to export
+' CTRL+SHIFT+W to preview
+
+@startuml diagram
+
+' Entities
+
+package "Crypto" #DDDDDD {
+    class Currency #96F372 {
+        - name: string
+        - is_active: boolean
+    }
+
+    class Order #96F372 {
+        - exchange: Exchange
+        - pair: Pair
+        - backtest: bool
+        - strategy: Strategy
+        - is_active: boolean
+    }
+
+    class Exchange #96F372 {
+        - name: string
+        - is_active: boolean
+    }
+
+    class Strategy #96F372 {
+        - name: string
+        - parameters: json
+    }
+
+    class Historic #96F372 {
+        - from_exchange: Exchange
+        - pair: Pair
+        - timeframe: string
+        - open_date: DateTime
+        - open_amount: float
+        - close_date: DateTime
+        - close_amount: float
+        - high: float
+        - low: float
+        - volume: float
+    }
+
+    class Pair #96F372 {
+        - from_exchange: Exchange
+        - currency: Currency
+        - to_currency: Currency
+        - last_imported: DateTime
+    }
+}
+
+package "Authentication" #DDDDDD {
+    class User #96F372 {
+        - username: string
+        - email: string
+        - password: string
+        - is_active: boolean
+    }
+}
+
+class Setting #96F372 {
+    ' ex : 
+    ' TRADINGVIEW_SETTINGS : { 
+    '     color_mode: dark 
+    '     view_type: logarithmic 
+    '     view_auto: false 
+    ' }
+    ' ex : to save a chart
+    ' TRADINGVIEW_INDICATOR_[NAME] : {  
+    '     start_point: 123123.48949
+    '     end_point: 123123.48949
+    ' }
+    - name: string 
+    - data: json
+}
+
+' Relations
+Exchange "One" -- "Many" Order
+Strategy "One" -- "Many" Order
+Historic "One" -- "Many" Exchange
+Pair "One" -- "Many" Historic
+Pair "One" -- "Many" Order
+
+@enduml

@@ -1,0 +1,28 @@
+# virtualenv
+env/
+.venv
+venv/
+ENV/
+.env
+
+#cache
+__pycache__/
+.mypy_cache
+
+# mkdocs documentation
+/site
+
+# dependencies
+node_modules
+
+# production
+build
+
+# misc
+.DS_Store
+
+npm-debug.log
+yarn-error.log
+yarn.lock
+.yarnclean
+.idea

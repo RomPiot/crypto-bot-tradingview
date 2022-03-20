@@ -1,0 +1,107 @@
+// ------------------------------------ //
+// -------------- SIZES --------------- //
+// ------------------------------------ //
+
+// ------------ CONTAINER ------------- //
+$container-desktop: 1000px;
+$container-mobile: 980px;
+$burger-menu: 1300px;
+
+// -------------- BLOCK --------------- //
+$nav-main-height: 70;
+$nav-top-height: 0;
+$menus-height: $nav-main-height + $nav-top-height;
+$main-top: 70px;
+
+// ------------------------------------ //
+// -------------- COLORS -------------- //
+// ------------------------------------ //
+
+// --------------- MAIN --------------- //
+$color-primary: #00c3dd;
+$color-secondary: #eeca00;
+
+$color-light: #ffffff;
+$color-medium: #f8f8f8;
+$color-dark: #333333;
+
+// -------------- TEXT -------------- //
+$title-color: $color-primary;
+$text-color: #313131;
+$link-color: $color-primary;
+$link-hover: $color-secondary;
+
+// ------------- HEADER -------------- //
+$header-text-color: $color-dark;
+$header-bkg: $color-light;
+
+// ------------- FOOTER -------------- //
+$footer-text-color: $color-light;
+$footer-link-color: $color-light;
+$footer-bkg: $color-dark;
+
+// ------------------------------------ //
+// -------------- FONTS --------------  //
+// ------------------------------------ //
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
+
+// --------------- TEXT ---------------  //
+$title-font: "Montserrat", "Helvetica", "Arial", "sans-serif";
+$text-font: "Lato", "Helvetica", "Arial", "sans-serif";
+$text-size: 16px;
+
+$h1-font-size: 28px;
+$h2-font-size: 24px;
+$h3-font-size: 22px;
+$h4-font-size: 20px;
+$h5-font-size: 18px;
+$h6-font-size: 16px;
+
+// ------------- BUTTON --------------  //
+
+// Btn global
+$btn-font-size: 14px;
+$btn-radius: 5px;
+$btn-font-weight: 400;
+
+// TODO : redifine btn colors
+// https://getbootstrap.com/docs/5.0/customize/color/
+// https://getbootstrap.com/docs/5.1/customize/sass/
+
+// $primary: red;
+// // $secondary,
+// // $success,
+// // $info,
+// // $warning,
+// // $danger,
+// // $light,
+// // $dark
+
+// $theme-colors: (
+//   "primary":    $primary,
+//   "secondary":  $secondary,
+//   "success":    $success,
+//   "info":       $info,
+//   "warning":    $warning,
+//   "danger":     $danger,
+//   "light":      $light,
+//   "dark":       $dark
+// );
+
+// // Btn primary
+$btn-primary-bg: $color-primary;
+$btn-primary-bg-hover: rgba($color-primary, 0.8);
+$btn-primary-color: $color-light;
+$btn-primary-color-hover: $color-light;
+$btn-primary-border: 1px solid $btn-primary-bg;
+$btn-primary-border-hover: 1px solid $btn-primary-bg-hover;
+
+// // Btn secondary
+$btn-secondary-bkg: $color-secondary;
+$btn-secondary-bkg-hover: rgba($color-secondary, 0.8);
+$btn-secondary-color: $color-light;
+$btn-secondary-color-hover: $color-light;
+$btn-secondary-border: 1px solid $btn-secondary-bkg;
+$btn-secondary-border-hover: 1px solid $btn-secondary-bkg-hover;
