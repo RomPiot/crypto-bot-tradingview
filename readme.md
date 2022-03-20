@@ -10,23 +10,23 @@ or pip install -r requirements.txt if project exists
 django-admin startproject projectnamewanted
 
 ## Configuration
-python3 manage.py startapp nameofffolder
+python3 src/manage.py startapp nameofffolder
 create your entities
-python3 manage.py makemigrations appname
-python3 manage.py migrate
-python3 manage.py showmigrations
-python3 manage.py migrate APPLICATION PREVIOUS_MIGRATION_NAME
+python3 src/manage.py makemigrations appname
+python3 src/manage.py migrate
+python3 src/manage.py showmigrations
+python3 src/manage.py migrate APPLICATION PREVIOUS_MIGRATION_NAME
 
 # Other
-python3 manage.py shell
+python3 src/manage.py shell
 
 ## Administration
-python3 manage.py createsuperuser
+python3 src/manage.py createsuperuser
 
 # Open existing Project
 Open project in WSL
 source .venv/bin/activate
-python3 manage.py runserver
+python3 src/manage.py runserver
 yarn start
 
 
