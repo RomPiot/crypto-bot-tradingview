@@ -2,9 +2,11 @@ import { createChart } from 'lightweight-charts';
 
 document.addEventListener("DOMContentLoaded", function () {
     const tradingview = document.getElementById('tradingview')
-    const chart = createChart(tradingview, { width: 400, height: 400 });
+    const chart = createChart(tradingview, { width: 1200, height: 800 });
 
     const candlestickSeries = chart.addCandlestickSeries();
+
+    
 
     // TODO : ajax to method who get all data from requested
     candlestickSeries.setData([

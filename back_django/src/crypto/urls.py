@@ -3,6 +3,6 @@ from crypto import views
 
 urlpatterns = [
     path("", views.page_home, name="home"),
-    # path("reparation/", views.page_reparation, name="reparation"),
-    # path("contact/", views.page_contact, name="contact"),
+    path("import-candles", views.import_candles_request, name="import_candles"),
+    path("get-candles", views.get_candles, name="get_candles"),
 ]
