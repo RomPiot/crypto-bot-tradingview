@@ -13,7 +13,7 @@ package "Crypto" #DDDDDD {
 
     class Order #96F372 {
         - exchange: Exchange
-        - pair: Pair
+        - symbol: Symbol
         - backtest: bool
         - strategy: Strategy
         - is_active: boolean
@@ -29,9 +29,9 @@ package "Crypto" #DDDDDD {
         - parameters: json
     }
 
-    class Historic #96F372 {
+    class Historical #96F372 {
         - from_exchange: Exchange
-        - pair: Pair
+        - symbol: Symbol
         - timeframe: string
         - open_date: DateTime
         - open_amount: float
@@ -42,7 +42,7 @@ package "Crypto" #DDDDDD {
         - volume: float
     }
 
-    class Pair #96F372 {
+    class Symbol #96F372 {
         - from_exchange: Exchange
         - currency: Currency
         - to_currency: Currency
@@ -78,8 +78,8 @@ class Setting #96F372 {
 ' Relations
 Exchange "One" -- "Many" Order
 Strategy "One" -- "Many" Order
-Historic "One" -- "Many" Exchange
-Pair "One" -- "Many" Historic
-Pair "One" -- "Many" Order
+Historical "One" -- "Many" Exchange
+Symbol "One" -- "Many" Historical
+Symbol "One" -- "Many" Order
 
 @enduml

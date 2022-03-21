@@ -1,6 +1,6 @@
-from django.shortcuts import get_object_or_404, render
-# from crypto.models import Page
-
+from django.shortcuts import render
+from crypto.services.import_currency import import_candles
+from datetime import datetime as dt
 
 # def page_list(request):
 #     pages = Page.objects.all()
@@ -19,7 +19,9 @@ from django.shortcuts import get_object_or_404, render
 
 
 def page_home(request):
+    date_start = dt(2017, 1, 1, 0, 0, 0, 0)
 
+    import_candles(symbol="btc/usdt", since=date_start)
     # page = get_object_or_404(Page, slug="home")
     # data = {
     #     "subtitle": "Que vous soyez chez vous, en terrasse ou au travail, nous récupérons votre appareil sur le lieu de votre choix, et nous vous le livrons réparé... dans la même journée.",
@@ -59,8 +61,8 @@ def page_home(request):
     # }
 
     context = {
-    #     "page": page,
-    #     "data": data,
+        #     "page": page,
+        #     "data": data,
     }
 
     return render(request, "page/home.html", context)

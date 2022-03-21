@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const chart = createChart(tradingview, { width: 400, height: 400 });
 
     const candlestickSeries = chart.addCandlestickSeries();
+
+    // TODO : ajax to method who get all data from requested
     candlestickSeries.setData([
         { time: '2018-12-22', open: 75.16, high: 82.84, low: 36.16, close: 45.72 },
         { time: '2018-12-23', open: 45.12, high: 53.90, low: 45.12, close: 48.09 },
