@@ -4,7 +4,7 @@
 
 {% block content %}
 
-	<section class="tradingview_container">
+	<section id="tradingview_container" data-ajax-url="{% url 'get_candles' %}">
 		<div id="tradingview"></div>
 
 	</section>

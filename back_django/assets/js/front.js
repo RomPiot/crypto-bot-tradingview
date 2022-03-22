@@ -1,4 +1,6 @@
-console.log('test RORO');
-
 import '../scss/styles.scss';
-import './front/chart';
+import { tradingview } from './front/tradingview';
+
+document.addEventListener("DOMContentLoaded", function () {
+    tradingview()
+});

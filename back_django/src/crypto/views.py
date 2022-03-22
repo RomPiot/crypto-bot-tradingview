@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.core import serializers
+from crypto.models import Historical
 from crypto.services.import_currency import import_candles
 from datetime import datetime as dt
 
@@ -16,8 +18,13 @@ def page_home(request):
     return render(request, "page/home.html", context)
 
 
-def get_candles():
-    return JsonResponse({"done": True})
+def get_candles(request):
+    date_start = dt(2017, 12, 25, 0, 0, 0, 0)
+
+    historicals = Historical.objects.filter(datetime__gte=date_start)
+    historicals = serializers.serialize("json", historicals)
+
+    return JsonResponse(historicals, safe=False)
 
 
 def import_candles_request(request):

@@ -16,5 +16,5 @@ install:
 source:
 	source .venv/bin/activate
 
-assets:
+asset:
 	yarn start
