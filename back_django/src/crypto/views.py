@@ -3,11 +3,13 @@ from django.shortcuts import render
 from django.core import serializers
 from crypto.models import Historical
 from crypto.services.import_currency import import_candles
-from datetime import datetime as dt
+from datetime import datetime
+from django.utils import timezone
 
 
 def page_home(request):
-    date_start = dt(2012, 1, 1, 0, 0, 0, 0)
+    date_start = datetime(2012, 1, 1, 0, 0, 0, 0, tzinfo=timezone.utc)
+    Historical.objects.all().delete()
 
     context = {
         "symbol": "btc/usdt",
@@ -19,17 +21,17 @@ def page_home(request):
 
 
 def get_candles(request):
-    date_start = dt(2017, 12, 25, 0, 0, 0, 0)
+    date_start = datetime(2017, 12, 25, 0, 0, 0, 0, tzinfo=timezone.utc)
 
-    historicals = Historical.objects.filter(datetime__gte=date_start)
+    historicals = Historical.objects.filter(datetime__gte=date_start).order_by("datetime")
     historicals = serializers.serialize("json", historicals)
 
     return JsonResponse(historicals, safe=False)
 
 
 def import_candles_request(request):
-    date_start = dt(2012, 1, 1, 0, 0, 0, 0)
+    date_start = datetime(2012, 1, 1, 0, 0, 0, 0, tzinfo=timezone.utc)
 
-    import_candles(symbol="btc/usdt", since=date_start)
+    results = import_candles(symbol="btc/usdt", since=date_start)
 
-    return JsonResponse({"done": True})
+    return JsonResponse({"results": results})

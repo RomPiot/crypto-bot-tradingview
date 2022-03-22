@@ -48,7 +48,7 @@ class Symbol(BaseModel):
     from_exchange = models.ForeignKey(Exchange, blank=False, null=True, on_delete=models.DO_NOTHING)
     currency = models.ForeignKey(Currency, blank=False, null=False, on_delete=models.DO_NOTHING, related_name="currency")
     to_currency = models.ForeignKey(Currency, blank=False, null=False, on_delete=models.DO_NOTHING, related_name="to_currency")
-    last_imported = models.DateTimeField(blank=True, null=True, editable=False)
+    last_imported = models.DateTimeField(blank=True, null=True, editable=True)
 
     class Meta:
         ordering = ["-created_at"]
@@ -92,6 +92,13 @@ class Historical(BaseModel):
     class Meta:
         ordering = ["-created_at"]
         verbose_name = "Historical"
+
+        unique_together = (
+            "from_exchange",
+            "symbol",
+            "timeframe",
+            "datetime",
+        )
 
     def __str__(self):
         return f"{self.symbol.currency.slug}/{self.symbol.to_currency.slug} ({self.from_exchange})"
