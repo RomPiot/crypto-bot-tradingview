@@ -1,12 +1,21 @@
 import ccxt
-from datetime import datetime
+from datetime import datetime, timedelta
 import os
 import pandas as pd
 from crypto.models import Currency, Exchange, Historical, Symbol
 from django.utils import timezone
 
 # 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w
-TIMEFRAME = {"1m": "minute", "5m": "five_minutes", "15m": "fiveteen_minutes", "1h": "hour", "4h": "four_hours", "12h": "twelve_hours", "1w": "week"}
+TIMEFRAME = {
+    "1m": "minute",
+    "5m": "five_minutes",
+    "15m": "fiveteen_minutes",
+    "1h": "hour",
+    "4h": "four_hours",
+    "12h": "twelve_hours",
+    "1d": "day",
+    "1w": "week",
+}
 
 
 def import_candles(
@@ -20,7 +29,9 @@ def import_candles(
     symbol = symbol.upper()
 
     exchange_class = getattr(ccxt, exchange_id)
-    exchange = exchange_class({"apiKey": os.environ.get("BINANCE_API_KEY"), "secret": os.environ.get("BINANCE_API_SECRET")})
+    exchange = exchange_class(
+        {"apiKey": os.environ.get("BINANCE_API_KEY"), "secret": os.environ.get("BINANCE_API_SECRET")}
+    )
 
     return fetch_all_candles(exchange, max_retries, symbol, timeframe, since, limit)
 
@@ -36,13 +47,16 @@ def fetch_all_candles(exchange, max_retries, symbol, timeframe, since, limit):
 
     symbolObj, created = Symbol.objects.get_or_create(
         from_exchange=exchangeObj,
-        currency=currencyObj,
+        from_currency=currencyObj,
         to_currency=toCurrencyObj,
     )
 
-    if symbolObj.last_imported_minute:
-        if since < symbolObj.last_imported_minute:
-            since = symbolObj.last_imported_minute
+    last_imported_timeframe_attr = f"last_imported_{TIMEFRAME[timeframe]}"
+    last_imported = getattr(symbolObj, last_imported_timeframe_attr)
+
+    if last_imported:
+        if since < last_imported:
+            since = last_imported
 
     while True:
         if retry_nb >= max_retries:
@@ -96,8 +110,11 @@ def save_candles(exchangeObj, symbolObj, timeframe, candles):
     # update all historical
     Historical.objects.bulk_create(historical_list, ignore_conflicts=True)
 
-    # update Symbol last insertion
-    symbolObj.last_imported_minute = candles.iloc[-1]["datetime"]
+    # update Symbol last imported datetime from timeframe type
+    last_imported_timeframe_attr = f"last_imported_{TIMEFRAME[timeframe]}"
+    last_imported = candles.iloc[-1]["datetime"]
+    setattr(symbolObj, last_imported_timeframe_attr, last_imported)
     symbolObj.save()
 
-    return symbolObj.last_imported_minute
+    next_datetime = getattr(symbolObj, last_imported_timeframe_attr) + timedelta(seconds=1)
+    return next_datetime

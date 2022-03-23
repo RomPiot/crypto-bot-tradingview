@@ -46,14 +46,19 @@ class Strategy(BaseModel):
 
 class Symbol(BaseModel):
     from_exchange = models.ForeignKey(Exchange, blank=False, null=True, on_delete=models.DO_NOTHING)
-    from_currency = models.ForeignKey(Currency, blank=False, null=False, on_delete=models.DO_NOTHING, related_name="from_currency")
-    to_currency = models.ForeignKey(Currency, blank=False, null=False, on_delete=models.DO_NOTHING, related_name="to_currency")
+    from_currency = models.ForeignKey(
+        Currency, blank=False, null=False, on_delete=models.DO_NOTHING, related_name="from_currency"
+    )
+    to_currency = models.ForeignKey(
+        Currency, blank=False, null=False, on_delete=models.DO_NOTHING, related_name="to_currency"
+    )
     last_imported_minute = models.DateTimeField(blank=True, null=True, editable=True)
     last_imported_five_minutes = models.DateTimeField(blank=True, null=True, editable=True)
     last_imported_fiveteen_minutes = models.DateTimeField(blank=True, null=True, editable=True)
     last_imported_hour = models.DateTimeField(blank=True, null=True, editable=True)
     last_imported_four_hours = models.DateTimeField(blank=True, null=True, editable=True)
     last_imported_twelve_hours = models.DateTimeField(blank=True, null=True, editable=True)
+    last_imported_day = models.DateTimeField(blank=True, null=True, editable=True)
     last_imported_week = models.DateTimeField(blank=True, null=True, editable=True)
 
     class Meta:

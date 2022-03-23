@@ -4,4 +4,6 @@
     "python.terminal.activateEnvironment": true,
     "python.terminal.activateEnvInCurrentTerminal": true,
     "python.envFile": "${workspaceFolder}/back_django/.venv",
+    "python.formatting.blackArgs": ["--line-length=120"],
+    "python.linting.flake8Args": ["--max-line-length=120"],
 }

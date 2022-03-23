@@ -51,8 +51,8 @@ async function historicalsToCandles(historicalsString) {
         })
     });
 
-    console.log(historicals);
-    console.log(candles);
+    // console.log(historicals);
+    // console.log(candles);
 
     return candles
 }
