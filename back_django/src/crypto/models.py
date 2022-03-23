@@ -1,11 +1,10 @@
 from django.db import models
+from app.models import BaseModel
 
 # from authentication.models import User
-from app.models import BaseModel
 
 # from django.template.defaultfilters import slugify
 
-# STATUS = ((0, "Draft"), (1, "Publish"), (2, "Delete"))
 # TIMEFRAME = (('1m', "1 minute"), ("1h", "1 hour"), (2, "Delete"))
 
 
@@ -23,6 +22,7 @@ class Currency(BaseModel):
 
 class Exchange(BaseModel):
     name = models.CharField(max_length=255, blank=False, null=False, unique=True)
+    slug = models.SlugField(max_length=100, blank=True, null=True, unique=True)
 
     class Meta:
         ordering = ["-created_at"]
@@ -46,21 +46,27 @@ class Strategy(BaseModel):
 
 class Symbol(BaseModel):
     from_exchange = models.ForeignKey(Exchange, blank=False, null=True, on_delete=models.DO_NOTHING)
-    currency = models.ForeignKey(Currency, blank=False, null=False, on_delete=models.DO_NOTHING, related_name="currency")
+    from_currency = models.ForeignKey(Currency, blank=False, null=False, on_delete=models.DO_NOTHING, related_name="from_currency")
     to_currency = models.ForeignKey(Currency, blank=False, null=False, on_delete=models.DO_NOTHING, related_name="to_currency")
-    last_imported = models.DateTimeField(blank=True, null=True, editable=True)
+    last_imported_minute = models.DateTimeField(blank=True, null=True, editable=True)
+    last_imported_five_minutes = models.DateTimeField(blank=True, null=True, editable=True)
+    last_imported_fiveteen_minutes = models.DateTimeField(blank=True, null=True, editable=True)
+    last_imported_hour = models.DateTimeField(blank=True, null=True, editable=True)
+    last_imported_four_hours = models.DateTimeField(blank=True, null=True, editable=True)
+    last_imported_twelve_hours = models.DateTimeField(blank=True, null=True, editable=True)
+    last_imported_week = models.DateTimeField(blank=True, null=True, editable=True)
 
     class Meta:
         ordering = ["-created_at"]
         verbose_name = "Symbol"
         unique_together = (
             "from_exchange",
-            "currency",
+            "from_currency",
             "to_currency",
         )
 
     def __str__(self):
-        return f"{self.currency.slug}/{self.to_currency.slug} ({self.from_exchange})"
+        return f"{self.from_currency.slug}/{self.to_currency.slug} ({self.from_exchange})"
 
 
 class Order(BaseModel):
@@ -75,7 +81,7 @@ class Order(BaseModel):
         verbose_name = "Order"
 
     def __str__(self):
-        return f"{self.symbol.currency.slug}/{self.symbol.to_currency.slug} ({self.symbol.exchange})"
+        return f"{self.symbol.from_currency.slug}/{self.symbol.to_currency.slug} ({self.symbol.exchange})"
 
 
 class Historical(BaseModel):
@@ -101,4 +107,4 @@ class Historical(BaseModel):
         )
 
     def __str__(self):
-        return f"{self.symbol.currency.slug}/{self.symbol.to_currency.slug} ({self.from_exchange})"
+        return f"{self.symbol.from_currency.slug}/{self.symbol.to_currency.slug} ({self.from_exchange})"

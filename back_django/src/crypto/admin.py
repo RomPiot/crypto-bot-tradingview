@@ -18,7 +18,7 @@ class ExchangeAdmin(admin.ModelAdmin):
 
 @admin.register(Historical)
 class HistoricalAdmin(admin.ModelAdmin):
-    list_display = ("datetime", "symbol", "open", "close", "high", "low")
+    list_display = ("timeframe", "datetime", "symbol", "open", "close", "high", "low")
 
     pass
 
@@ -30,7 +30,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(Symbol)
 class SymbolAdmin(admin.ModelAdmin):
-    list_display = ("from_exchange", "currency", "to_currency", "last_imported")
+    list_display = ("from_exchange", "from_currency", "to_currency", "last_imported_minute")
 
     pass
 

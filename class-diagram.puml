@@ -46,7 +46,7 @@ package "Crypto" #DDDDDD {
         - from_exchange: Exchange
         - currency: Currency
         - to_currency: Currency
-        - last_imported: DateTime
+        - last_imported_minute: DateTime
     }
 }
 

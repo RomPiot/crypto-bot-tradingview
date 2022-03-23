@@ -5,23 +5,24 @@ import pandas as pd
 from crypto.models import Currency, Exchange, Historical, Symbol
 from django.utils import timezone
 
+# 1m, 3m, 5m, 15m, 30m, 1h, 2h, 4h, 6h, 8h, 12h, 1d, 3d, 1w
+TIMEFRAME = {"1m": "minute", "5m": "five_minutes", "15m": "fiveteen_minutes", "1h": "hour", "4h": "four_hours", "12h": "twelve_hours", "1w": "week"}
 
-# TODO function can be called from api or cron
+
 def import_candles(
     symbol,
     since: datetime = datetime(2012, 1, 1, 0, 0, 0, 0, tzinfo=timezone.utc),
-    limit=1000,
+    limit=1000000,
     exchange_id="binance",
     max_retries=9999999999,
     timeframe="1m",
 ):
     symbol = symbol.upper()
-    since_datetime = int(since.timestamp() * 1000)
 
     exchange_class = getattr(ccxt, exchange_id)
     exchange = exchange_class({"apiKey": os.environ.get("BINANCE_API_KEY"), "secret": os.environ.get("BINANCE_API_SECRET")})
 
-    return fetch_all_candles(exchange, max_retries, symbol, timeframe, since_datetime, limit)
+    return fetch_all_candles(exchange, max_retries, symbol, timeframe, since, limit)
 
 
 def fetch_all_candles(exchange, max_retries, symbol, timeframe, since, limit):
@@ -39,10 +40,9 @@ def fetch_all_candles(exchange, max_retries, symbol, timeframe, since, limit):
         to_currency=toCurrencyObj,
     )
 
-    if symbolObj.last_imported:
-        last_imported_timesamp = int(symbolObj.last_imported.timestamp()) * 1000
-        if since < last_imported_timesamp:
-            since = last_imported_timesamp
+    if symbolObj.last_imported_minute:
+        if since < symbolObj.last_imported_minute:
+            since = symbolObj.last_imported_minute
 
     while True:
         if retry_nb >= max_retries:
@@ -64,7 +64,8 @@ def fetch_all_candles(exchange, max_retries, symbol, timeframe, since, limit):
 
 
 def retry_fetch_ohlcv(exchange, symbol, timeframe, since, limit):
-    ohlcv = exchange.fetch_ohlcv(symbol, timeframe, since, limit)
+    since_unixtimestamp = int(since.timestamp() * 1000)
+    ohlcv = exchange.fetch_ohlcv(symbol, timeframe, since_unixtimestamp, limit)
     return ohlcv
 
 
@@ -96,8 +97,7 @@ def save_candles(exchangeObj, symbolObj, timeframe, candles):
     Historical.objects.bulk_create(historical_list, ignore_conflicts=True)
 
     # update Symbol last insertion
-    symbolObj.last_imported = candles.iloc[-1]["datetime"]
+    symbolObj.last_imported_minute = candles.iloc[-1]["datetime"]
     symbolObj.save()
 
-    last_imported_timestamp = int(symbolObj.last_imported.timestamp()) * 1000  # type: ignore
-    return last_imported_timestamp
+    return symbolObj.last_imported_minute
