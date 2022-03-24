@@ -58,21 +58,34 @@ def get_candles(request):
 
 def import_candles_request(request):
     symbols = Symbol.objects.all()
-    timeframe = "1h"
+    # timeframe = "1h"
 
-    for symbolObj in symbols:
-        last_imported_timeframe_attr = f"last_imported_{TIMEFRAME[timeframe]}"
-        last_imported = getattr(symbolObj, last_imported_timeframe_attr)
+    TIMEFRAME_LOOP = {
+        "1h": "hour",
+        "4h": "four_hours",
+        "12h": "twelve_hours",
+        "1d": "day",
+        "1w": "week",
+    }
 
-        if last_imported:
-            date_start = last_imported
-        else:
-            date_start = datetime(2012, 1, 1, 0, 0, 0, 0, tzinfo=timezone.utc)
+    for timeframe in TIMEFRAME_LOOP:
 
-        symbol = f"{symbolObj.from_currency.slug}/{symbolObj.to_currency.slug}"
+        for symbolObj in symbols:
+            last_imported_timeframe_attr = f"last_imported_{TIMEFRAME[timeframe]}"
+            last_imported = getattr(symbolObj, last_imported_timeframe_attr)
 
-        print(symbol)
+            if last_imported:
+                date_start = last_imported
+            else:
+                date_start = datetime(2012, 1, 1, 0, 0, 0, 0, tzinfo=timezone.utc)
 
-        import_candles(symbol=symbol, since=date_start, exchange_id=symbolObj.from_exchange.slug, timeframe=timeframe)
+            symbol = f"{symbolObj.from_currency.slug}/{symbolObj.to_currency.slug}"
+
+            print(symbol)
+            print(timeframe)
+
+            import_candles(
+                symbol=symbol, since=date_start, exchange_id=symbolObj.from_exchange.slug, timeframe=timeframe
+            )
 
     return JsonResponse({"results": True})
