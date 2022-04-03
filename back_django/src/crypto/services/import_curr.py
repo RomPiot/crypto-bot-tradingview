@@ -3,10 +3,19 @@ import ccxt.async_support as ccxt
 import os
 from datetime import datetime
 from django.utils import timezone
-from numpy import True_
 from crypto.services.constants import TIMEFRAME
 from crypto.models import Exchange, Historical, Symbol
 import pandas as pd
+
+
+def exchange_api(exchange: Exchange):
+    exchange_class = getattr(ccxt, exchange.slug)
+    env_exchange_api_key = f"{exchange.slug}_API_KEY".upper()
+    env_exchange_api_secret = f"{exchange.slug}_API_SECRET".upper()
+
+    return exchange_class(
+        {"apiKey": os.environ.get(env_exchange_api_key), "secret": os.environ.get(env_exchange_api_secret)}
+    )
 
 
 def save_historical(exchange: Exchange, pair_symbol: Symbol, timeframe: str, ohlcv_list):
@@ -47,21 +56,16 @@ def save_historical(exchange: Exchange, pair_symbol: Symbol, timeframe: str, ohl
     pair_symbol.save()
 
 
-async def fetch_ohlcv(exchange_api, exchange: Exchange, pair_symbol: Symbol, timeframe: str, since, limit: int):
+async def fetch_ohlcv(exchange: Exchange, pair_symbol: Symbol, timeframe: str, since, limit: int):
     since_unixtimestamp = int(since.timestamp() * 1000)
     pair_string = f"{pair_symbol.from_currency.slug}/{pair_symbol.to_currency.slug}".upper()
 
-    ohlcv = await exchange_api.fetch_ohlcv(pair_string, timeframe, since_unixtimestamp, int(limit))
+    ohlcv = await exchange_api(exchange).fetch_ohlcv(pair_string, timeframe, since_unixtimestamp, int(limit))
     if ohlcv:
         save_historical(exchange=exchange, pair_symbol=pair_symbol, timeframe=timeframe, ohlcv_list=ohlcv)
 
 
 async def import_currencies_async(exchange: Exchange, timeframes: list, pair_symbols=None):
-    exchange_class = getattr(ccxt, exchange.slug)
-    exchange_api = exchange_class(
-        {"apiKey": os.environ.get("BINANCE_API_KEY"), "secret": os.environ.get("BINANCE_API_SECRET")}
-    )
-
     loops = []
 
     if not pair_symbols:
@@ -80,7 +84,6 @@ async def import_currencies_async(exchange: Exchange, timeframes: list, pair_sym
 
             loops.append(
                 fetch_ohlcv(
-                    exchange_api=exchange_api,
                     exchange=exchange,
                     pair_symbol=pair,
                     timeframe=timeframe,
@@ -90,7 +93,7 @@ async def import_currencies_async(exchange: Exchange, timeframes: list, pair_sym
             )
 
     await asyncio.gather(*loops)
-    await exchange_api.close()
+    await exchange_api(exchange).close()
 
 
 def import_currencies(exchange: Exchange, timeframes: list, pair_symbols=None):
