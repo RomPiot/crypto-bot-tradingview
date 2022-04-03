@@ -23,6 +23,7 @@ class Currency(BaseModel):
 class Exchange(BaseModel):
     name = models.CharField(max_length=255, blank=False, null=False, unique=True)
     slug = models.SlugField(max_length=100, blank=True, null=True, unique=True)
+    limit = models.CharField(max_length=255, blank=False, null=False)
 
     class Meta:
         ordering = ["-created_at"]

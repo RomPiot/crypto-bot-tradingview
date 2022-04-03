@@ -13,6 +13,7 @@ class CurrencyAdmin(admin.ModelAdmin):
 
 @admin.register(Exchange)
 class ExchangeAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug", "limit", "updated_at")
     pass
 
 

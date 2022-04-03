@@ -1,3 +1,4 @@
+# TODO : timeframe in db
 TIMEFRAME = {
     "1m": {"db_name": "minute", "ms": 60000},
     "5m": {"db_name": "five_minutes", "ms": 300000},

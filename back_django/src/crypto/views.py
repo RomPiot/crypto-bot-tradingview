@@ -1,9 +1,13 @@
+from asyncio import get_event_loop
+import asyncio
+import threading
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.core import serializers
-from back_django.src.crypto.services.constants import TIMEFRAME
+from crypto.services.import_curr import import_currencies
+from crypto.services.constants import TIMEFRAME
 from crypto.models import Currency, Exchange, Historical, Symbol
-from crypto.services.import_currency import import_historical
+from crypto.services.import_currency import import_historical, import_multiple_currency, import_multiple_historical
 from datetime import datetime
 from django.utils import timezone
 
@@ -46,36 +50,12 @@ def get_candles(request):
 
 
 def import_historical_request(request):
-    symbols = Symbol.objects.all()
+    exchange = Exchange.objects.get(slug="binance")
     # timeframe = "1h"
 
-    # TODO : get entries from TIMEFRAME
-    TIMEFRAME_LOOP = {
-        "1h": "hour",
-        "4h": "four_hours",
-        "12h": "twelve_hours",
-        "1d": "day",
-        "1w": "week",
-    }
-
-    for timeframe in TIMEFRAME_LOOP:
-        for symbolObj in symbols:
-            timeframe_db_name = TIMEFRAME[timeframe]["db_name"]
-            last_imported_timeframe_attr = f"last_imported_{timeframe_db_name}"
-            last_imported = getattr(symbolObj, last_imported_timeframe_attr)
-
-            if last_imported:
-                date_start = last_imported
-            else:
-                date_start = datetime(2012, 1, 1, 0, 0, 0, 0, tzinfo=timezone.utc)
-
-            symbol = f"{symbolObj.from_currency.slug}/{symbolObj.to_currency.slug}"
-
-            print(symbol)
-            print(timeframe)
-
-            import_historical(
-                symbol=symbol, since=date_start, exchange_id=symbolObj.from_exchange.slug, timeframe=timeframe
-            )
+    # timeframes = ["1h", "4h", "12h", "1d", "1w"]
+    timeframes = ["15m"]
+    # TODO : timeframe_array
+    import_currencies(exchange=exchange, timeframes=timeframes)
 
     return JsonResponse({"results": True})

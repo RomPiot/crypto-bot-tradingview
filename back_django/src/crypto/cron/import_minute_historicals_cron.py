@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from back_django.src.crypto.services.constants import TIMEFRAME
+from crypto.services.constants import TIMEFRAME
 from crypto.models import Symbol
 from crypto.services.import_currency import import_historical
 from datetime import datetime
