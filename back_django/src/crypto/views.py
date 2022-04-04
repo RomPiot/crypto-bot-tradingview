@@ -29,8 +29,8 @@ def page_home(request):
 def get_candles(request):
     date_start = datetime(2012, 1, 1, 0, 0, 0, 0, tzinfo=timezone.utc)
 
-    timeframe = "1h"
-    from_currency = Currency.objects.get(slug="BTC")
+    timeframe = "15m"
+    from_currency = Currency.objects.get(slug="ETH")
     to_currency = Currency.objects.get(slug="USDT")
     exchange = Exchange.objects.get(slug="binance")
     symbol = Symbol.objects.get(from_exchange=exchange, from_currency=from_currency, to_currency=to_currency)
@@ -51,11 +51,8 @@ def get_candles(request):
 
 def import_historical_request(request):
     exchange = Exchange.objects.get(slug="binance")
-    # timeframe = "1h"
-
     # timeframes = ["1h", "4h", "12h", "1d", "1w"]
     timeframes = ["15m"]
-    # TODO : timeframe_array
     import_currencies(exchange=exchange, timeframes=timeframes)
 
     return JsonResponse({"results": True})

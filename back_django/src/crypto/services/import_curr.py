@@ -1,7 +1,9 @@
 import asyncio
+from pprint import pprint
+from time import sleep
 import ccxt.async_support as ccxt
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils import timezone
 from crypto.services.constants import TIMEFRAME
 from crypto.models import Exchange, Historical, Symbol
@@ -14,7 +16,14 @@ def exchange_api(exchange: Exchange):
     env_exchange_api_secret = f"{exchange.slug}_API_SECRET".upper()
 
     return exchange_class(
-        {"apiKey": os.environ.get(env_exchange_api_key), "secret": os.environ.get(env_exchange_api_secret)}
+        {
+            "options": {
+                "adjustForTimeDifference": True,
+                "recvWindow": 10000,
+            },
+            "apiKey": os.environ.get(env_exchange_api_key),
+            "secret": os.environ.get(env_exchange_api_secret),
+        }
     )
 
 
@@ -68,6 +77,8 @@ async def fetch_ohlcv(exchange: Exchange, pair_symbol: Symbol, timeframe: str, s
 async def import_currencies_async(exchange: Exchange, timeframes: list, pair_symbols=None):
     loops = []
 
+    now = datetime.now(tz=timezone.utc)
+
     if not pair_symbols:
         pair_symbols = Symbol.objects.all()
 
@@ -82,17 +93,36 @@ async def import_currencies_async(exchange: Exchange, timeframes: list, pair_sym
             else:
                 since = datetime(2012, 1, 1, 0, 0, 0, 0, tzinfo=timezone.utc)
 
-            loops.append(
-                fetch_ohlcv(
-                    exchange=exchange,
-                    pair_symbol=pair,
-                    timeframe=timeframe,
-                    since=since,
-                    limit=int(exchange.limit),
-                )
-            )
+            datetime_loops = [since]
 
-    await asyncio.gather(*loops)
+            while since < now:
+                ms_to_add = int(exchange.limit) * int(TIMEFRAME[timeframe]["ms"])
+                since = since + timedelta(milliseconds=ms_to_add)
+                if since < now:
+                    datetime_loops.append(since)
+
+            for since_date in datetime_loops:
+                # pprint(since_date)
+                loops.append(
+                    fetch_ohlcv(
+                        exchange=exchange,
+                        pair_symbol=pair,
+                        timeframe=timeframe,
+                        since=since_date,
+                        limit=int(exchange.limit),
+                    )
+                )
+
+    # TODO : maybe wait 1 seconde every 12 request
+    # TODO : slice and loop ?
+    while loops:
+        print(len(loops))
+
+        current_loops = loops[0:11]
+        await asyncio.gather(*current_loops)
+        del loops[0:11]
+        # sleep(1)
+
     await exchange_api(exchange).close()
 
 
