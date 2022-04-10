@@ -1,13 +1,8 @@
-from asyncio import get_event_loop
-import asyncio
-import threading
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.core import serializers
 from crypto.services.import_curr import import_currencies
-from crypto.services.constants import TIMEFRAME
 from crypto.models import Currency, Exchange, Historical, Symbol
-from crypto.services.import_currency import import_historical, import_multiple_currency, import_multiple_historical
 from datetime import datetime
 from django.utils import timezone
 
@@ -49,10 +44,17 @@ def get_candles(request):
     return JsonResponse(historicals, safe=False)
 
 
-def import_historical_request(request):
+async def import_historical_request(request):
     exchange = Exchange.objects.get(slug="binance")
     # timeframes = ["1h", "4h", "12h", "1d", "1w"]
-    timeframes = ["15m"]
-    import_currencies(exchange=exchange, timeframes=timeframes)
+    timeframes = ["1h"]
+
+    pair_symbol = Symbol.objects.get(name="BTC/USDT")
+    # pair_symbol.last_imported_hour = None
+    # pair_symbol.save()
+
+    # Historical.objects.filter(symbol=pair_symbol).delete()
+
+    await import_currencies(exchange=exchange, timeframes=timeframes, pair_symbols=[pair_symbol])
 
     return JsonResponse({"results": True})

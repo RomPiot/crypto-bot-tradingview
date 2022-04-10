@@ -5,8 +5,6 @@ from app.models import BaseModel
 
 # from django.template.defaultfilters import slugify
 
-# TIMEFRAME = (('1m', "1 minute"), ("1h", "1 hour"), (2, "Delete"))
-
 
 class Currency(BaseModel):
     name = models.CharField(max_length=255, blank=False, null=False, unique=True)
@@ -23,7 +21,8 @@ class Currency(BaseModel):
 class Exchange(BaseModel):
     name = models.CharField(max_length=255, blank=False, null=False, unique=True)
     slug = models.SlugField(max_length=100, blank=True, null=True, unique=True)
-    limit = models.CharField(max_length=255, blank=False, null=False)
+    limit = models.IntegerField(blank=False, null=False)
+    max_per_second = models.IntegerField(blank=False, null=False, default=10)
 
     class Meta:
         ordering = ["-created_at"]
@@ -61,6 +60,7 @@ class Symbol(BaseModel):
     last_imported_twelve_hours = models.DateTimeField(blank=True, null=True, editable=True)
     last_imported_day = models.DateTimeField(blank=True, null=True, editable=True)
     last_imported_week = models.DateTimeField(blank=True, null=True, editable=True)
+    name = models.CharField(max_length=255, blank=True, null=True, unique=False)
 
     class Meta:
         ordering = ["-created_at"]
@@ -71,8 +71,12 @@ class Symbol(BaseModel):
             "to_currency",
         )
 
+    def save(self, *args, **kwargs):
+        self.name = f"{self.from_currency.slug}/{self.to_currency.slug}".upper()
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.from_currency.slug}/{self.to_currency.slug} ({self.from_exchange})"
+        return f"{self.name} ({self.from_exchange})"
 
 
 class Order(BaseModel):
