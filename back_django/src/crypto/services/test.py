@@ -1,9 +1,6 @@
-from pprint import pprint
 import ccxt.async_support as ccxt
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 import pandas as pd
-import asyncio
-import time
 import asyncio
 
 
@@ -23,7 +20,7 @@ async def fetch_history_data(start_time: datetime):
     # for exchange in ccxt.exchanges:
     for exchange_slug in EXCHANGES:
         # Turn on rate limiting
-        exchange = getattr(ccxt, exchange_slug)({"enableRateLimit": True})
+        exchange = getattr(ccxt, exchange_slug)({"enableRateLimit": True, "verbose": False})
         exchange.throttle.config["maxCapacity"] = 100000
         exchange.throttle.config["delay"] = 0.01
         exchanges.append(exchange)

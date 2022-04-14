@@ -12,7 +12,12 @@ DATABASES = {
     }
 }
 
-INSTALLED_APPS += ["debug_toolbar"]
+ENV_BANNER_SHOW = os.environ.get("ENV_BANNER_SHOW")
+ENV_BANNER_NAME = "LOCAL ENVIRONMENT"
+ENV_BANNER_BG_COLOR = "#FF2222"
+ENV_BANNER_TEXT_COLOR = "white"
+
+INSTALLED_APPS.append("debug_toolbar")
 
 MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
 

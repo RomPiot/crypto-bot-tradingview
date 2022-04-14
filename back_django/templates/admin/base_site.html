@@ -1,0 +1,30 @@
+{% extends "admin/base_site.html" %}
+
+{% block header %}
+    {% if ENV_BANNER_SHOW %}
+    <style>
+        .env-banner {
+            background-color: {{ ENV_BANNER_BG_COLOR }};
+            {% comment %} position: sticky;
+            top: 0; {% endcomment %}
+            width: 100%;
+            height: 30px;
+            text-align: center;
+            display:flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .env-banner p {
+            height: fit-content;
+            font-weight: bold; 
+            margin: 0;
+            color: {{ ENV_BANNER_TEXT_COLOR }}
+        }
+    </style>
+
+    <div class="env-banner">
+        <p>{{ ENV_BANNER_NAME }}</p>
+    </div>
+    {% endif %}
+    {{ block.super }}
+{% endblock %}

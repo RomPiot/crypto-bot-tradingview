@@ -74,6 +74,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "app.context_processors.from_settings",
             ],
         },
     },
@@ -141,7 +142,6 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_URL = "/media/"
-
 MEDIA_ROOT = BASE_DIR / "public/media"
 
 # Default primary key field type

@@ -1,2 +1,6 @@
 # flake8: noqa
 from .base import *
+
+ENV_BANNER_NAME = "PREPROD ENVIRONMENT"
+ENV_BANNER_BG_COLOR = "#2743b8"
+ENV_BANNER_TEXT_COLOR = "white"
